@@ -22,7 +22,7 @@ Job = namedtuple("Job",
 @app.route("/")
 def index():
     builds = os.listdir(app.config["DATA_DIR"])
-    builds.sort(key=natsort)
+    builds.sort(key=natsort, reverse=True)
     builds = [Build(name=name, jobs=[], url=url_for("view_build", build=name))
               for name in builds]
     return render_template("index.html", builds=builds)
