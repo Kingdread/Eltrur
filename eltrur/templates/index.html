@@ -35,6 +35,8 @@
     <a href='{{ url_for("view_build", build=build.name) }}' class="list-group-item">
         <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
         Build {{ build.name }}
+        <span class="text-muted">{{ build.jobs | length }} jobs{% if build.failed_jobs() %},
+            <span class="text-danger">{{ build.failed_jobs() | length }} failed {% endif %}</span></span>
     </a>
     {% endfor %}
 </div>

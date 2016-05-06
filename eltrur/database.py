@@ -15,6 +15,9 @@ class Build(db.Model):
     def sorted_jobs(self):
         return sorted(self.jobs, key=lambda job: natsort(job.name))
 
+    def failed_jobs(self):
+        return [job for job in self.jobs if not job.all_passed]
+
 
 class Job(db.Model):
     __tablename__ = "job"
