@@ -103,6 +103,11 @@ def screenshot(build, job, test):
     return response
 
 
+@app.errorhandler(404)
+def error_404(e):
+    return render_template("error_404.html", title="404"), 404
+
+
 def parse_report(data):
     result = []
     lines = data.split("\n")
