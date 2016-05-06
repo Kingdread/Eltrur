@@ -11,36 +11,36 @@ $(document).ready(function() {
 
 {% block crumbs %}
 <li><a href="{{ url_for('index') }}">Index</a></li>
-<li><a href="{{ url_for('view_build', build=build) }}">Build {{ build }}</a></li>
-<li class="active">Job {{ job }}</li>
+<li><a href="{{ job.build.url }}">Build {{ job.build.name }}</a></li>
+<li class="active">Job {{ job.job }}</li>
 {% endblock %}
 
 {% block content %}
 <div class="page-header">
-    <h1> Job {{ job }} <small>Part of build {{ build }}</small></h1>
+    <h1> Job {{ job.job }} <small>Part of build {{ job.build.name }}</small></h1>
 </div>
 <div class="panel panel-default">
     <div class="panel-body">
         <table class="table table-condensed table-hover">
-            <tr><td>Upload time</td><td>{{ data["upload-time"].strftime("%d.%m.%Y %H:%M:%S") }}</td></tr>
-            <tr><td>Branch</td><td>{{ data["branch"] }}</td></tr>
-            <tr><td>Commit</td><td><a href="https://github.com/Kingdread/Rurtle/commit/{{ data['commit'] }}">{{ data['commit'] }}</a></td></tr>
-            <tr><td>Operating System</td><td>{{ data["os"] }}</td></tr>
-            <tr><td>Rust version</td><td>{{ data["rust-version"] }}</td></tr>
-            <tr><td colspan="2"><a href="{{ data['url'] }}">View this job on Travis</a></td></tr>
+            <tr><td>Upload time</td><td>{{ job.upload_time.strftime("%d.%m.%Y %H:%M:%S") }}</td></tr>
+            <tr><td>Branch</td><td>{{ job.branch }}</td></tr>
+            <tr><td>Commit</td><td><a href="https://github.com/Kingdread/Rurtle/commit/{{ job.commit }}">{{ job.commit }}</a></td></tr>
+            <tr><td>Operating System</td><td>{{ job.os }}</td></tr>
+            <tr><td>Rust version</td><td>{{ job.rust_version }}</td></tr>
+            <tr><td colspan="2"><a href="{{ job.travis_url }}">View this job on Travis</a></td></tr>
         </table>
     </div>
 </div>
 
 <div class="list-group">
-    {% for test in data["tests"] %}
+    {% for test in job.tests %}
     <a href="#"
        class="collapser list-group-item list-group-item-{% if test['passed'] %}success{% else %}danger{% endif %}">
         <span class="glyphicon glyphicon-{% if test['passed'] %}ok{% else %}remove{% endif %}" aria-hidden="true"></span>
         {{ test["test"] }}<br>
         <div class="collapse">
-            <a href="{{ url_for('screenshot', build=build, job=job, test=test['screenshot']) }}">
-                <img src="{{ url_for('screenshot', build=build, job=job, test=test['screenshot']) }}">
+            <a href="{{ url_for('screenshot', build=job.build.name, job=job.job, test=test['screenshot']) }}">
+                <img src="{{ url_for('screenshot', build=job.build.name, job=job.job, test=test['screenshot']) }}">
             </a>
         </div>
     </a>

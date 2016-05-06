@@ -32,7 +32,10 @@
 <h2>Build list</h2>
 <div class="list-group">
     {% for build in builds %}
-    <a href='{{ url_for("view_build", build=build) }}' class="list-group-item">Build {{ build }}</a>
+    <a href='{{ build.url }}' class="list-group-item">
+        <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+        Build {{ build.name }}
+    </a>
     {% endfor %}
 </div>
 {% endblock %}

@@ -2,6 +2,7 @@ import datetime
 import os
 import re
 import time
+from collections import namedtuple
 from flask import (Flask, abort, json, render_template, request,
                    send_from_directory, url_for)
 from werkzeug import secure_filename
@@ -11,10 +12,18 @@ app = Flask(__name__)
 app.config.from_pyfile("settings.py")
 
 
+Build = namedtuple("Build", "name jobs url")
+Job = namedtuple("Job",
+                 "job build tests branch commit os rust_version "
+                 "travis_url all_passed upload_time url")
+
+
 @app.route("/")
 def index():
     builds = os.listdir(app.config["DATA_DIR"])
     builds.sort(key=natsort)
+    builds = [Build(name=name, jobs=[], url=url_for("view_build", build=name))
+              for name in builds]
     return render_template("index.html", builds=builds)
 
 
@@ -32,10 +41,10 @@ def upload():
         "build": request.form["build"],
         "job": request.form["job"],
         "os": request.form["os"],
-        "rust-version": request.form["rust-version"],
-        "url": request.form["url"],
-        "all-passed": all(test["passed"] for test in report_data),
-        "upload-time": time.time(),
+        "rust_version": request.form["rust-version"],
+        "travis_url": request.form["url"],
+        "all_passed": all(test["passed"] for test in report_data),
+        "upload_time": time.time(),
     }
 
     build_dir = secure_filename(metadata["build"])
@@ -58,7 +67,7 @@ def upload():
         shot.save(shot_path)
 
     return url_for(
-        view_single_job,
+        "view_single_job",
         build=metadata["build"],
         job=metadata["job"],
     )
@@ -71,18 +80,23 @@ def view_build(build):
         jobs = os.listdir(build_dir)
     except FileNotFoundError:
         abort(404)
-    job_data = {}
+    jobjects = []
     for job in jobs:
         metadata_path = os.path.join(build_dir, job, "metadata")
         with open(metadata_path) as metadata_file:
             metadata = json.load(metadata_file)
-        metadata_scheme(metadata)
-        job_data[job] = metadata
+        job = create_job(metadata)
+        jobjects.append(job)
+    jobjects.sort(key=lambda j: natsort(j.job))
+    build = Build(
+        name=build,
+        jobs=jobjects,
+        url=url_for("view_build", build=build),
+    )
     return render_template(
         "single_build.html",
-        title="build #{}".format(build),
+        title="Build #{}".format(build.name),
         build=build,
-        jobs=sorted(job_data.items(), key=lambda t: (natsort(t[0]), t[1])),
     )
 
 
@@ -96,14 +110,12 @@ def view_single_job(build, job):
             metadata = json.load(metadata_file)
     except IOError:
         abort(404)
-    metadata_scheme(metadata)
+    job = create_job(metadata)
 
     return render_template(
         "single_job.html",
-        title="Job {}".format(job),
+        title="Job {}".format(job.job),
         job=job,
-        build=build,
-        data=metadata,
     )
 
 
@@ -142,9 +154,15 @@ def natsort(string):
     return result
 
 
-def metadata_scheme(obj):
-    obj["upload-time"] = datetime.datetime.fromtimestamp(obj["upload-time"])
-    return obj
+def create_job(obj):
+    # Copy the dict
+    obj = dict(obj)
+    obj["upload_time"] = datetime.datetime.fromtimestamp(obj["upload_time"])
+    obj["build"] = Build(obj["build"], [], url_for("view_build",
+                                                   build=obj["build"]))
+    obj["url"] = url_for("view_single_job", build=obj["build"].name,
+                         job=obj["job"])
+    return Job(**obj)
 
 
 if __name__ == "__main__":
