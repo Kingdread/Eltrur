@@ -1,6 +1,7 @@
 import datetime
 import os
 import re
+import shutil
 import time
 from collections import namedtuple
 from flask import (Flask, abort, json, render_template, request,
@@ -51,8 +52,9 @@ def upload():
     job_dir = secure_filename(metadata["job"])
     target_dir = os.path.join(app.config["DATA_DIR"], build_dir, job_dir)
 
+    # Travis allows rebuilds of jobs, we don't want to reject that data
     if os.path.exists(target_dir):
-        abort(418)
+        shutil.rmtree(target_dir)
     os.makedirs(target_dir, exist_ok=True)
 
     metadata_path = os.path.join(target_dir, "metadata")
