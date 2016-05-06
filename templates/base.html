@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <!-- Latest compiled and minified CSS -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+        <!-- Optional theme -->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-2.2.3.min.js" crossorigin="anonymous"></script>
+
+        <!-- Latest compiled and minified JavaScript -->
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+{% block script %}
+{% endblock %}
+        </script>
+
+        <title>Eltrur{% if title %} - {{ title }}{% endif %}</title>
+    </head>
+    <body>
+        <nav class="navbar navbar-inverse">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="{{ url_for('index') }}">Eltrur</a>
+                </div>
+
+                <div class="collapse navbar-collapse">
+                    <ul class="nav navbar-nav">
+                        <li><a href="https://github.com/Kingdread/Eltrur">
+                            <span class="glyphicon glyphicon-console" aria-hidden="true"></span> GitHub
+                        </a></li>
+                        <li><a href="https://travis-ci.org/Kingdread/Rurtle">Travis</a></li>
+                        <li><a href="https://github.com/Kingdread/Rurtle">Rurtle</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <ol class="breadcrumb">
+            {% block crumbs %}
+            {% endblock %}
+        </ol>
+
+        {% block content %}
+        {% endblock %}
+
+        <footer class="footer">
+            <div class="container">
+                <p class="text-muted">
+                &copy; 2016 Daniel Schadt. &mdash;
+                Made with <span class="glyphicon glyphicon-heart" aria-hidden="true"></span> and Open Source.
+                </p>
+            </div>
+        </footer>
+    </body>
+</html>

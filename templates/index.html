@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block crumbs %}
+<li class="active">Index</li>
+{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Eltrur <small>Rurtle test archive</small></h1>
+</div>
+
+<h2>Welcome</h2>
+
+<p>This is the place where Rurtle uploads the test results from the CI.
+<a href="#moreInformation" data-toggle="collapse" aria-expanded="false" aria-controls="moreInformation">Learn more.</a></p>
+
+<div class="collapse" id="moreInformation">
+    <p> Rurtle performs a series of automatic tests on Travis-CI. Some of these
+    tests involve generating an image and comparing this image to a reference
+    image. If this test fails, it is useful to see what exactly was produced.
+    Unforunately, Travis does not store the data by itself, so the test routine
+    uses a script to upload the test images to this page, where I (and other
+    developers) can review them.</p>
+
+    <p>Learn more about:
+    <ul>
+        <li><a href="https://github.com/Kingdread/Rurtle">Rurtle</a> on GitHub</li>
+        <li><a href="https://travis-ci.org">Travis CI</a></li>
+    </ul></p>
+</div>
+
+<h2>Build list</h2>
+<div class="list-group">
+    {% for build in builds %}
+    <a href='{{ url_for("view_build", build=build) }}' class="list-group-item">Build {{ build }}</a>
+    {% endfor %}
+</div>
+{% endblock %}
