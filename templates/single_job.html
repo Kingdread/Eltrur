@@ -22,6 +22,7 @@ $(document).ready(function() {
 <div class="panel panel-default">
     <div class="panel-body">
         <table class="table table-condensed table-hover">
+            <tr><td>Upload time</td><td>{{ data["upload-time"].strftime("%d.%m.%Y %H:%M:%S") }}</td></tr>
             <tr><td>Branch</td><td>{{ data["branch"] }}</td></tr>
             <tr><td>Commit</td><td><a href="https://github.com/Kingdread/Rurtle/commit/{{ data['commit'] }}">{{ data['commit'] }}</a></td></tr>
             <tr><td>Operating System</td><td>{{ data["os"] }}</td></tr>

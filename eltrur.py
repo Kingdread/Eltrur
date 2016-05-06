@@ -1,5 +1,7 @@
+import datetime
 import os
 import re
+import time
 from flask import (Flask, abort, json, render_template, request,
                    send_from_directory, url_for)
 from werkzeug import secure_filename
@@ -33,6 +35,7 @@ def upload():
         "rust-version": request.form["rust-version"],
         "url": request.form["url"],
         "all-passed": all(test["passed"] for test in report_data),
+        "upload-time": time.time(),
     }
 
     build_dir = secure_filename(metadata["build"])
@@ -73,6 +76,7 @@ def view_build(build):
         metadata_path = os.path.join(build_dir, job, "metadata")
         with open(metadata_path) as metadata_file:
             metadata = json.load(metadata_file)
+        metadata_scheme(metadata)
         job_data[job] = metadata
     return render_template(
         "single_build.html",
@@ -92,6 +96,7 @@ def view_single_job(build, job):
             metadata = json.load(metadata_file)
     except IOError:
         abort(404)
+    metadata_scheme(metadata)
 
     return render_template(
         "single_job.html",
@@ -135,6 +140,11 @@ def natsort(string):
         except ValueError:
             result.append(part)
     return result
+
+
+def metadata_scheme(obj):
+    obj["upload-time"] = datetime.datetime.fromtimestamp(obj["upload-time"])
+    return obj
 
 
 if __name__ == "__main__":
