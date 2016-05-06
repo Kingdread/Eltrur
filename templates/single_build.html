@@ -15,6 +15,10 @@
     <a href='{{ url_for("view_single_job", build=build, job=job) }}' class="list-group-item list-group-item-{% if data['all-passed'] %}success{% else %}danger{% endif %}">
         <span class="glyphicon glyphicon-{% if data['all-passed'] %}ok{% else %}remove{% endif %}" aria-hidden="true"></span>
         {{ job }} &mdash; {{ data["branch"] }} on {{ data["os"] }}/{{ data["rust-version"] }}
+        <span class="text-muted">
+            <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
+            at {{ data["upload-time"].strftime("%d.%m.%Y %H:%M:%S") }}
+        </span>
     </a>
     {% endfor %}
 </div>
