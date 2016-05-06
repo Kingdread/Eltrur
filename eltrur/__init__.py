@@ -51,14 +51,15 @@ def upload():
     job.name = request.form["job"]
     db.session.add(job)
 
-    test_names = {test["screenshot"]: test["test"] for test in report_data}
+    test_names = {test["screenshot"]: test for test in report_data}
     for shot in request.files.getlist("shots"):
         if shot.filename not in test_names:
             continue
         test = Test(job=job)
-        test.name = test_names[shot.filename]
+        test.name = test_names[shot.filename]["test"]
         test.image_name = shot.filename
         test.image = shot.read()
+        test.passed = test_names[shot.filename]["passed"]
         db.session.add(test)
 
     db.session.commit()
