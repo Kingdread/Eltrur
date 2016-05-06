@@ -24,12 +24,21 @@ Configuration
 -------------
 
 1) Edit the source
-2) Create a `settings.py`:
+2) Create a `instance/settings.py`:
 
 ```
 UPLOAD_KEY = "your_secret_upload_key"
-DATA_DIR = "data/"
+SQLALCHEMY_DATABASE_URI = "sqlite:///path/to/database"
 ```
+
+In an interactive python shell, run
+
+```python
+from eltrur.database import db
+db.create_all()
+```
+
+to set up the database.
 
 Make sure to keep `UPLOAD_KEY` secret and set it as a secure travis environment
 variable.

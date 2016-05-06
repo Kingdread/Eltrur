@@ -11,10 +11,10 @@
 </div>
 
 <div class="list-group">
-    {% for job in build.jobs %}
-    <a href='{{ job.url }}' class="list-group-item list-group-item-{% if job.all_passed %}success{% else %}danger{% endif %}">
+    {% for job in build.sorted_jobs() %}
+    <a href='{{ url_for("view_single_job", build=build.name, job=job.name) }}' class="list-group-item list-group-item-{% if job.all_passed %}success{% else %}danger{% endif %}">
         <span class="glyphicon glyphicon-{% if job.all_passed %}ok{% else %}remove{% endif %}" aria-hidden="true"></span>
-        {{ job.job }} &mdash; {{ job.branch }} on {{ job.os }}/{{ job.rust_version }}
+        {{ job.name }} &mdash; {{ job.branch }} on {{ job.os }}/{{ job.rust_version }}
         <span class="text-muted">
             <span class="glyphicon glyphicon-time" aria-hidden="true"></span>
             at {{ job.upload_time.strftime("%d.%m.%Y %H:%M:%S") }}
