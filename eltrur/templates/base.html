@@ -23,10 +23,19 @@
         <nav class="navbar navbar-inverse">
             <div class="container-fluid">
                 <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed"
+                                          data-toggle="collapse"
+                                          data-target="#navbar-top"
+                                          aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
                     <a class="navbar-brand" href="{{ url_for('index') }}">Eltrur</a>
                 </div>
 
-                <div class="collapse navbar-collapse">
+                <div class="collapse navbar-collapse" id="navbar-top">
                     <ul class="nav navbar-nav">
                         <li><a href="https://github.com/Kingdread/Eltrur">
                             <span class="glyphicon glyphicon-console" aria-hidden="true"></span> GitHub
